@@ -31,7 +31,7 @@ This project is a simple jigsaw puzzle game that fetches random images from the 
 
 ## Demo
 
-![Jigsaw Puzzle Demo](https://niraj-node.github.io/Jigsaw-Puzzle)
+![Jigsaw Puzzle Demo](https://niraj-node.github.io/Jigsaw-Puzzle/)
 
 ## Contributing
 
