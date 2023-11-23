@@ -1,6 +1,17 @@
 ﻿var image = { src: './Rick-Rothenberg.jpg', title: 'Rick Rothenberg' };
 var timerFunction;
 
+function playmore() {
+    $('#gameOver').hide();
+    $('#actualImageBox').show();
+
+    fetchImage().then(() => {
+        var gridSize = $('#levelPanel :radio:checked').val();
+        imagePuzzle.startGame(image, gridSize);
+    });
+}
+
+
 $(document).ready(function() 
 {
     fetchImage().then(() => {
@@ -11,13 +22,6 @@ $(document).ready(function()
     $('#newPhoto').click(function() {
         fetchImage().then(() => {
             var gridSize = $('#levelPanel :radio:checked').val();
-            imagePuzzle.startGame(image, gridSize);
-        });
-    });
-
-    $('#play').click(function() {
-        var gridSize = 2;
-        fetchImage().then(() => {
             imagePuzzle.startGame(image, gridSize);
         });
     });
@@ -66,13 +70,20 @@ var imagePuzzle =
 
                 currentList = $('#sortable > li').map(function (i, el) { return $(el).attr('data-value'); });
                 if (isSorted(currentList))
-                    $('#actualImageBox').empty().html($('#gameOver').html());
+                {
+                    var now = new Date().getTime();
+                    imagePuzzle.stepCount++;
+                    $('#stepCount').text(imagePuzzle.stepCount);
+                    $('#timeCount').text(parseInt((now - imagePuzzle.startTime) / 1000, 10));
+                    $('#actualImageBox').hide();
+                    $('#gameOver').show();
+                }
                 else 
                 {
                     var now = new Date().getTime();
                     imagePuzzle.stepCount++;
-                    $('.stepCount').text(imagePuzzle.stepCount);
-                    $('.timeCount').text(parseInt((now - imagePuzzle.startTime) / 1000, 10));
+                    $('#stepCount').text(imagePuzzle.stepCount);
+                    $('#timeCount').text(parseInt((now - imagePuzzle.startTime) / 1000, 10));
                 }
 
                 imagePuzzle.enableSwapping(this);
@@ -84,7 +95,7 @@ var imagePuzzle =
     setImage: function (image, gridSize) 
     {
         //console.log(gridSize);
-        gridSize = gridSize || 2; // If gridSize is null or not passed, default it as 2.
+        gridSize = gridSize || 3; // If gridSize is null or not passed, default it as 2.
         //console.log(gridSize);
         var percentage = 100/(gridSize - 1);
         $('#imgTitle').html("Author : "+image.title);

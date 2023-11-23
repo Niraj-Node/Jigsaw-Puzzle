@@ -8,14 +8,13 @@
 
 <body>
     <div id="collage">
-        
         <h2>Picture Puzzle</h2>
         <hr />
-        
         <div id="playPanel" style="padding:5px;display:none;">
             <h3 id="imgTitle"></h3> <hr />
             <div style="display:inline-block; margin:auto; width:95%; vertical-align:top;">
                 <ul id="sortable" class="sortable"></ul>
+
                 <div id="actualImageBox">
                     <div id="stepBox">
                         <div>Count:</div><div class="stepCount">0</div>
@@ -37,23 +36,21 @@
                         <button id="newPhoto" type="button" class="btn">Next Picture</button>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div id="gameOver" style="display:none;">
-            <div style="background-color: #fc9e9e; padding: 5px 10px 20px 10px; text-align: center; ">
-                <h2 style="text-align:center">Game over !!</h2>
-                Congratulations!! <br /> You got the picture ready.
-                <br />
-                Tile Swap: <span class="stepCount">0</span> gear.
-                <br />
-                Time spent: <span class="timeCount">0</span> seconds<br />
-                <div style="margin-top: 20px;">
-                    <button id="play" type="button">Play more</button>
+        
+                <div id="gameOver">
+                    <div>
+                        <h2>Game over !!</h2>
+                        <p>Congratulations!!<br/> You got the picture ready!</p>
+                        <p>Tile Swap: <span id="stepCount">0</span> gear</p>
+                        <p>Time spent: <span id="timeCount">0</span> seconds</p>
+                        <div>
+                            <button id="play" onclick="playmore()" type="button">Play more</button>
+                        </div>
+                    </div>
                 </div>
+                
             </div>
-        </div>
-
+        </div>       
     </div>
 </body>
 
