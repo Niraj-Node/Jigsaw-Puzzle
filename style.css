@@ -1,159 +1,262 @@
 ﻿body {
-    font-family: 'Segoe UI', Calibri, Arial;
-    margin:0;
-    background-color: #92c4fa;
-}
-h2{
-    font-weight:normal;
-    text-align:center;
-}
-h3{
-    font-weight:normal;
-    margin:3px 0px;
-    text-align:center;
+  font-family: "Segoe UI", Calibri, Arial;
+  margin: 0;
+  /* background: linear-gradient(135deg, #92c4fa, #d1a7f9); */
+  background: linear-gradient(135deg, #7f8c8d, #2c3e50);
+  display: inline;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
 
-.uploadOuter {
-    text-align: center;
-    padding: 20px;
-    strong {
-      padding: 0 10px 0 0;
-    }
+h2,
+h3 {
+  font-weight: normal;
+  text-align: center;
+  color: #333;
 }
 
-.radio {
-    margin-right: 10px;
+h3 {
+  margin: 3px 0;
 }
 
-.dragBox {
-    width: 250px;
-    height: 100px;
-    margin: 0 auto;
-    position: relative;
-    text-align: center;
-    font-weight: bold;
-    line-height: 95px;
-    color: #999;
-    border: 2px dashed #ccc;
-    display: inline-block;
-    transition: transform 0.3s;
-    input[type="file"] {
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      opacity: 0;
-      top: 0;
-      left: 0;
-   }
-}
-.draging {
-    transform: scale(1.1);
-}
-#preview {
-    text-align: center;
-    img {
-      max-width: 100%;
-    }
+.card {
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px 0;
+  margin: 30px auto;
+  width: 90%;
 }
 
-#collage hr{
-    border:none;
-    border-top:2px solid #f5f2f2;
-    height:1px;
+#collage hr {
+  border-top: 2px solid #624f4f;
+  height: 3px;
 }
 
 #collage #playPanel {
-    background-color:#edd0f6;
-    padding:10px 0px;
-    margin: 10px auto;
-    max-width:800px;
-    width:95%;
+  background: linear-gradient(135deg, #edd0f6, #c3a0f3);
+  border-radius: 10px;
+  padding: 15px;
+  margin: 10px auto;
+  max-width: 70%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-#collage #actualImageBox {
-    display: inline-block;
-    font-size:0.8em;
-    margin: 10px 10px;
-    vertical-align: top;
-    width:280px;
+.puzzle-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: auto;
+  width: 95%;
+  vertical-align: top;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
 
-#gameOver {
-    display: none;
-    margin-right: 10px;
-    margin-top: 10px;
-    margin-left: 20px;
-    width: 280px;
-    vertical-align: top;
-    max-width: 300x;
+.puzzle-container #sortable {
+  /* height: 100%; */
+  max-width: 400px;
+  border: 2px solid #8e24aa;
+  border-radius: 8px;
+  margin: 10px 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  list-style-type: none;
+  justify-content: center;
+  align-content: start;
 }
 
-#gameOver div {
-    background-color: #fc9e9e;
-    padding: 20px 10px;
-    text-align: center;
+.puzzle-container #sortable li {
+  width: 100px;
+  height: 100px;
+  /* border: 1px solid #8e24aa; */
+  /* border-radius: 8px; */
+  background-color: #e1bee7;
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#gameOver h2 {
-    text-align: center;
+.puzzle-container #sortable li:hover {
+  transform: scale(1.05);
+}
+.no-hover {
+  pointer-events: none;
+  cursor: default;
+  transform: none;
 }
 
-#gameOver button {
-    background-color: #f5f2f2;
-    border: 1px solid #cce;
-    font-size: 14px;
-    padding: 3px 8px;
+.puzzle-container #actualImageBox {
+  font-size: 0.8em;
+  padding: 20px;
+  margin: 10px 0;
+  vertical-align: top;
+  width: 100%;
+  max-width: 280px;
+  border: 2px solid #9c27b0;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f3e5f5;
 }
 
-#actualImageBox[style*="display: none"] + #gameOver {
-    display: inline-block;
+.puzzle-container img#actualImage {
+  border: 3px solid #9c27b0;
+  border-radius: 8px;
+  height: 280px;
+  width: 280px;
 }
 
-#collage #stepBox, #collage #timeBox {
-    display:inline-block;
-    width:48%;
+.puzzle-container #stepBox,
+.puzzle-container #timeBox {
+  display: inline-block;
+  width: 45%;
+  font-size: 1em;
+  margin-bottom: 10px;
+  background-color: #fce4ec;
+  padding: 5px;
+  border-radius: 5px;
 }
 
-#collage #stepBox div {
-    background-color:#c2defc;
-    display:inline-block;
-    padding:1px 4px;
-    margin: 0px auto;
-    max-width:800px;
+.puzzle-container #stepBox div {
+  background-color: #c2defc;
+  display: inline-block;
+  padding: 1px 4px;
+  margin: 0px auto;
+  max-width: 800px;
 }
 
-#collage img#actualImage{
-    border:2px solid #a46;
-    height:280px;
-    width:280px;
+.puzzle-container button {
+  background: #8e24aa;
+  border: none;
+  color: #fff;
+  display: inline;
+  font-size: 14px;
+  padding: 5px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
-#collage #sortable {
-    border:2px solid #a46;
-    list-style-type: none;
-    display: inline-block;
-    margin: 10px;
-    padding: 0;
-    width: 400px;
+.puzzle-container button:hover {
+  background: #6a1b9a;
 }
 
-#collage #sortable li {
-    background-size: 400% 400%;
-    border: none;
-    cursor: pointer;
-    margin: 0;
-    padding: 0;
-    float: left;
-    width: 100px;
-    height: 100px;
+.puzzle-container #gameOver {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 100%;
+  max-width: 280px;
+  border: 2px solid #e91e63;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* background: #f06292; */
+  background: linear-gradient(135deg, #f8bbd0, #f06292);
+  padding: 20px;
 }
 
-#collage button {
-    background-color:#f5f2f2;
-    border:1px solid #cce;
-    display: inline;
-    font-size: 14px;
-    height: auto;
-    width: auto;
-    padding: 3px 8px;
+.puzzle-container #gameOver div {
+  padding: 20px 10px;
+}
+
+.puzzle-container #gameOver button,
+.btn {
+  background: #8e24aa;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 14px;
+}
+
+.puzzle-container #gameOver button:hover,
+.btn:hover {
+  background: #6a1b9a;
+}
+
+.puzzle-container #actualImageBox[style*="display: none"] + #gameOver {
+  display: inline-block;
+}
+
+.puzzle-container input[type="radio"] {
+  margin-right: 5px;
+}
+
+/* Existing media queries for responsiveness */
+@media (max-width: 768px) {
+  .puzzle-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #collage #playPanel {
+    max-width: 90%;
+  }
+
+  .puzzle-container #sortable {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  }
+
+  .puzzle-container #sortable li {
+    width: 70px;
+    height: 70px;
+  }
+
+  .puzzle-container img#actualImage {
+    height: 200px;
+    width: 200px;
+  }
+
+  .puzzle-container #actualImageBox,
+  .puzzle-container #gameOver {
+    width: 90%;
+  }
+}
+
+@media (max-width: 520px) {
+  body {
+    padding: 10px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: none;
+  }
+
+  #collage #playPanel {
+    padding: 10px;
+    max-width: 100%;
+  }
+
+  .puzzle-container #sortable {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  }
+
+  .puzzle-container #sortable li {
+    width: 60px;
+    height: 60px;
+  }
+
+  .puzzle-container img#actualImage {
+    height: 150px;
+    width: 150px;
+  }
+
+  .puzzle-container button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .puzzle-container #stepBox,
+  .puzzle-container #timeBox {
+    width: 100%;
+    margin-bottom: 5px;
+  }
 }

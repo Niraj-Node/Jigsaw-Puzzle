@@ -1,180 +1,183 @@
-﻿var image = { src: './Rick-Rothenberg.jpg', title: 'Rick Rothenberg' };
-var timerFunction;
+﻿class ImagePuzzle {
+  constructor() {
+    this.step = 0;
+    this.startTime = 0;
+    this.timerFunction = null;
+    this.currentImage = {
+      src: "./Rick-Rothenberg.jpg",
+      title: "Rick Rothenberg",
+    };
+    this.init();
+  }
 
-function playmore() {
-    $('#gameOver').hide();
-    $('#actualImageBox').show();
+  init() {
+    this.bindEvents();
+    this.fetchImageAndStartGame();
+  }
 
-    fetchImage().then(() => {
-        var gridSize = $('#levelPanel :radio:checked').val();
-        imagePuzzle.startGame(image, gridSize);
-    });
+  bindEvents() {
+    $("#newPhoto").on("click", () => this.fetchImageAndStartGame());
+    $("#playMore").on("click", () => this.fetchImageAndStartGame());
+    $("#levelPanel :radio").on("change", () =>
+      this.startGame(this.currentImage, this.getGridSize())
+    );
+  }
+
+  async fetchImageAndStartGame() {
+    try {
+      $("#gameOver").hide();
+      $("#actualImageBox").show();
+      await this.fetchImage();
+      this.startGame(this.currentImage, this.getGridSize());
+    } catch (error) {
+      console.error("Error fetching image:", error);
+    }
+  }
+
+  async fetchImage() {
+    const imageId = Math.floor(Math.random() * 1001);
+    try {
+      const response = await fetch(`https://picsum.photos/id/${imageId}/info`);
+      if (!response.ok) throw new Error("Failed to fetch image details");
+
+      const data = await response.json();
+      this.currentImage = {
+        src: `https://picsum.photos/id/${imageId}/400`,
+        title: data.author,
+      };
+    } catch (error) {
+      console.error("Error fetching image details:", error);
+    }
+  }
+
+  startGame(image, gridSize) {
+    this.setImage(image, gridSize);
+    this.step = 0;
+    $("#stepPanel").text(this.step);
+    $("#playPanel").show();
+    $("#sortable li").removeClass("no-hover");
+    this.enableSwapping("#sortable li");
+    this.startTime = Date.now();
+    this.updateTimer();
+  }
+
+  setImage(image, gridSize = 3) {
+    const percentage = 100 / (gridSize - 1);
+    $("#imgTitle").text(`Author : ${image.title}`);
+    $("#actualImage").attr("src", image.src);
+    $("#sortable").empty();
+
+    for (let i = 0; i < gridSize * gridSize; i++) {
+      const xpos = percentage * (i % gridSize) + "%";
+      const ypos = percentage * Math.floor(i / gridSize) + "%";
+      const li = $('<li class="item"></li>')
+        .attr("data-value", i)
+        .css({
+          "background-image": `url(${image.src})`,
+          "background-size": `${gridSize * 100}%`,
+          "background-position": `${xpos} ${ypos}`,
+          width: 400 / gridSize,
+          height: 400 / gridSize,
+        });
+      $("#sortable").append(li);
+    }
+
+    while (this.isSorted(this.getCurrentListOrder())) {
+      $("#sortable").randomize();
+    }
+  }
+
+  getCurrentListOrder() {
+    return $("#sortable > li")
+      .map((i, el) => $(el).attr("data-value"))
+      .get();
+  }
+
+  isSorted(arr) {
+    return arr.slice(0, -1).every((val, i) => val == i);
+  }
+
+  enableSwapping(elem) {
+    $(elem)
+      .draggable({
+        snap: "#droppable",
+        snapMode: "outer",
+        revert: "invalid",
+        helper: "clone",
+      })
+      .droppable({
+        drop: (event, ui) => this.handleDrop(event, ui),
+      });
+  }
+
+  handleDrop(event, ui) {
+    const $dragElem = $(ui.draggable).clone().replaceAll(event.target);
+    $(event.target).replaceAll(ui.draggable);
+    this.step++;
+
+    const currentList = this.getCurrentListOrder();
+    if (this.isSorted(currentList)) {
+      $("#stepCount").text(this.step);
+      $("#timerCount").text(this.getElapsedTime());
+      this.endGame();
+    } else {
+      $("#stepPanel").text(this.step);
+      $("#timerPanel").text(this.getElapsedTime());
+    }
+
+    this.enableSwapping(event.target);
+    this.enableSwapping($dragElem);
+  }
+
+  getElapsedTime() {
+    return Math.floor((Date.now() - this.startTime) / 1000);
+  }
+
+  endGame() {
+    this.stopTimer();
+    $("#sortable li").addClass("no-hover");
+    $("#actualImageBox").hide();
+    $("#gameOver").show();
+  }
+
+  updateTimer() {
+    this.stopTimer();
+    this.timerFunction = setInterval(() => {
+      const elapsedTime = Math.floor((Date.now() - this.startTime) / 1000);
+      $("#timerPanel").text(elapsedTime);
+    }, 1000);
+  }
+
+  stopTimer() {
+    if (this.timerFunction) clearInterval(this.timerFunction);
+  }
+
+  getGridSize() {
+    return $("#levelPanel :radio:checked").val() || 3;
+  }
 }
 
-
-$(document).ready(function() 
-{
-    fetchImage().then(() => {
-        var gridSize = $('#levelPanel :radio:checked').val();
-        imagePuzzle.startGame(image, gridSize);
-    });
-
-    $('#newPhoto').click(function() {
-        fetchImage().then(() => {
-            var gridSize = $('#levelPanel :radio:checked').val();
-            imagePuzzle.startGame(image, gridSize);
-        });
-    });
-
-    $('#levelPanel :radio').change(function(e) {
-        var gridSize = $(this).val();
-        imagePuzzle.startGame(image, gridSize);        
-    });
+// Initialize and run ImagePuzzle
+$(document).ready(() => {
+  const puzzle = new ImagePuzzle();
 });
 
-var imagePuzzle = 
-{
-    stepCount: 0,
-    startTime: new Date().getTime(),
-    startGame: function (image, gridSize) 
-    {
-        this.setImage(image, gridSize);
-        $('#playPanel').show();
-        //$('#sortable').randomize();
-        this.enableSwapping('#sortable li');
-        this.stepCount = 0;
-        this.startTime = new Date().getTime();
-        this.tick();
-    },
-    tick: function () 
-    {
-        var now = new Date().getTime();
-        var elapsedTime = parseInt((now - imagePuzzle.startTime) / 1000, 10);
-        $('#timerPanel').text(elapsedTime);
-        timerFunction = setTimeout(imagePuzzle.tick, 1000);
-    },
-    
-    enableSwapping: function (elem) 
-    {
-        $(elem).draggable({
-            snap: '#droppable',
-            snapMode: 'outer',
-            revert: "invalid",
-            helper: "clone"
-        });
-        $(elem).droppable({
-            drop: function (event, ui) 
-            {
-                var $dragElem = $(ui.draggable).clone().replaceAll(this);
-                $(this).replaceAll(ui.draggable);
-
-                currentList = $('#sortable > li').map(function (i, el) { return $(el).attr('data-value'); });
-                if (isSorted(currentList))
-                {
-                    var now = new Date().getTime();
-                    imagePuzzle.stepCount++;
-                    $('#stepCount').text(imagePuzzle.stepCount);
-                    $('#timeCount').text(parseInt((now - imagePuzzle.startTime) / 1000, 10));
-                    $('#actualImageBox').hide();
-                    $('#gameOver').show();
-                }
-                else 
-                {
-                    var now = new Date().getTime();
-                    imagePuzzle.stepCount++;
-                    $('#stepCount').text(imagePuzzle.stepCount);
-                    $('#timeCount').text(parseInt((now - imagePuzzle.startTime) / 1000, 10));
-                }
-
-                imagePuzzle.enableSwapping(this);
-                imagePuzzle.enableSwapping($dragElem);
-            }
-        });
-    },
-
-    setImage: function (image, gridSize) 
-    {
-        //console.log(gridSize);
-        gridSize = gridSize || 3; // If gridSize is null or not passed, default it as 2.
-        //console.log(gridSize);
-        var percentage = 100/(gridSize - 1);
-        $('#imgTitle').html("Author : "+image.title);
-        $('#actualImage').attr('src', image.src);
-        $('#sortable').empty();
-        for (var i = 0; i < gridSize * gridSize; i++) 
-        {
-            var xpos = (percentage * (i % gridSize)) + '%';
-            var ypos = (percentage * Math.floor(i / gridSize)) + '%';
-            var li = $('<li class="item" data-value="' + (i) + '"></li>').css({
-                'background-image': 'url(' + image.src + ')',
-                'background-size': (gridSize * 100) + '%',
-                'background-position': xpos + ' ' + ypos,
-                'width': 400 / gridSize,
-                'height': 400 / gridSize
-            });
-            $('#sortable').append(li);
-        }
-        $('#sortable').randomize();
-        currentList = $('#sortable > li').map(function (i, el) { return $(el).attr('data-value'); });
-        while(isSorted(currentList))
-        {
-            this.setImage(image, gridSize);
-        }
-    }    
+// Utility function to randomize sortable elements
+$.fn.randomize = function (selector) {
+  const $elems = selector ? this.find(selector) : this.children();
+  $elems.parent().each(() =>
+    $(this)
+      .children(selector)
+      .sort(() => Math.random() - 0.5)
+      .detach()
+      .appendTo(this)
+  );
+  return this;
 };
 
-function isSorted(arr) 
-{
-    for (var i = 0; i < arr.length - 1; i++) 
-    {
-        if (arr[i] != i)
-            return false;
-    }
-    return true;
-}
-
-$.fn.randomize = function (selector) 
-{
-    var $elems = selector ? $(this).find(selector) : $(this).children(),
-        $parents = $elems.parent();
-
-    $parents.each(function () {
-        $(this).children(selector).sort(function () {
-            return Math.round(Math.random()) - 0.5;
-        }).remove().appendTo(this);
-    });
-    return this;
-};
-
-async function fetchImage() 
-{
-    try 
-    {
-        const imageId = Math.floor(Math.random() * 1001);
-        const response = await fetch(`https://picsum.photos/id/${imageId}/info`);
-
-        if(!response.ok) {
-            throw new Error('Failed to fetch image details');
-        }
-
-        const data = await response.json();
-
-        if(data) 
-        {
-            var new_image = {
-                src: `https://picsum.photos/id/${imageId}/400`,
-                title: data.author
-            };
-
-            image = new_image;
-            //console.log(image);
-        }
-    } 
-    catch (error) {
-        console.error('Error fetching image details:', error);
-    }
-}
-
+// Display game rules
 function rules() {
-    alert('Rearrange the pieces so that you get a sample image. \nThe steps taken are counted');
+  alert(
+    "Rearrange the pieces to match the original image.\nEach move is counted."
+  );
 }

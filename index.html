@@ -1,6 +1,9 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jigsaw Puzzle</title>
     <link rel="icon" type="image/x-icon" href="./favicon.png">
     <link href="./style.css" rel="stylesheet" />
@@ -8,49 +11,54 @@
 
 <body>
     <div id="collage">
-        <h2>Jigsaw Puzzle</h2>
-        <hr />
-        <div id="playPanel" style="padding:5px;display:none;">
-            <h3 id="imgTitle"></h3> <hr />
-            <div style="display:inline-block; margin:auto; width:95%; vertical-align:top;">
-                <ul id="sortable" class="sortable"></ul>
+        <div class="card">
+            <h2>Jigsaw Puzzle</h2>
+            <hr />
+            <div id="playPanel">
+                <h3 id="imgTitle">Puzzle Game</h3>
+                <hr />
+                <div class="puzzle-container">
+                    <ul id="sortable" class="sortable"></ul>
 
-                <div id="actualImageBox">
-                    <div id="stepBox">
-                        <div>Count:</div><div class="stepCount">0</div>
-                    </div>
-                    <div id="timeBox">
-                        Time: <span id="timerPanel"></span> seconds
-                    </div>
-                    <img id="actualImage" />
-                    <div>See the picture and solve the puzzle.</div>
-                    <p id="levelPanel">
-                        <input type="radio" name="level" id="veryeasy" value="2" /> <label for="veryeasy">Very Easy</label>
-                        <input type="radio" name="level" id="easy" checked="checked" value="3" /> <label for="easy">Easy</label>
-                        <input type="radio" name="level" id="medium" value="4" /> <label for="medium">Medium</label>
-                        <input type="radio" name="level" id="hard" value="5" /> <label for="hard">Hard</label>
-						<input type="radio" name="level" id="veryhard" value="6" /> <label for="veryhard">Very Hard</label>
-                    </p>
-                    <div>
-                        <button id="btnRule" type="button" class="btn" onclick="rules();">Rules</button>
-                        <button id="newPhoto" type="button" class="btn">Next Picture</button>
-                    </div>
-                </div>
-        
-                <div id="gameOver">
-                    <div>
-                        <h2>Game over !!</h2>
-                        <p>Congratulations!!<br/> You got the picture ready!</p>
-                        <p>Tile Swap: <span id="stepCount">0</span> gear</p>
-                        <p>Time spent: <span id="timeCount">0</span> seconds</p>
+                    <div id="actualImageBox" class="card">
+                        <div id="stepBox">
+                            Steps: <div id="stepPanel">0</div>
+                        </div>
+                        <div id="timeBox">
+                            Time: <span id="timerPanel">0</span> seconds
+                        </div>
+                        <img id="actualImage" alt="" />
+                        <div>See the picture and solve the puzzle.</div>
+                        <p id="levelPanel">
+                            <input type="radio" name="level" id="veryeasy" value="2" /> <label for="veryeasy">Very
+                                Easy</label>
+                            <input type="radio" name="level" id="easy" checked="checked" value="3" /> <label
+                                for="easy">Easy</label>
+                            <input type="radio" name="level" id="medium" value="4" /> <label for="medium">Medium</label>
+                            <input type="radio" name="level" id="hard" value="5" /> <label for="hard">Hard</label>
+                            <input type="radio" name="level" id="veryhard" value="6" /> <label for="veryhard">Very
+                                Hard</label>
+                        </p>
                         <div>
-                            <button id="play" onclick="playmore()" type="button">Play more</button>
+                            <button id="btnRule" type="button" class="btn" onclick="rules();">Rules</button>
+                            <button id="newPhoto" type="button" class="btn">Next Picture</button>
+                        </div>
+                    </div>
+
+                    <div id="gameOver" class="card">
+                        <div>
+                            <h2>Game Over!</h2>
+                            <p>Congratulations! You've solved the puzzle!</p>
+                            <p>Tile Swaps: <span id="stepCount">0</span></p>
+                            <p>Time Spent: <span id="timerCount">0</span> seconds</p>
+                            <div>
+                                <button id="playMore" type="button">Play Again</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
             </div>
-        </div>       
+        </div>
     </div>
 </body>
 
