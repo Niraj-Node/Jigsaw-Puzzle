@@ -28,10 +28,11 @@ This project is a simple jigsaw puzzle game that fetches random images from the 
 ## Credits
 
 - [Lorem Picsum](https://picsum.photos/) - For providing random placeholder images.
-
+  
 ## Demo
 
-![Jigsaw Puzzle Demo](https://niraj-node.github.io/Jigsaw-Puzzle/)
+[![Jigsaw Puzzle Demo](./Jigsaw-Puzzle.png)](https://niraj-node.github.io/Jigsaw-Puzzle/)
+
 
 ## Contributing
 
